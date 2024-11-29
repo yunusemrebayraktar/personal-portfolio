@@ -1,15 +1,29 @@
 .footer {
   background-color: var(--dark);
+<<<<<<< HEAD
   border-top: 2px solid var(--silver);
   height: 10vh;
 }
 
 .copyright {
   color: var(--silver);
+=======
+  color: var(--light);
+}
+
+.copyright {
+  color: var(--light);
+}
+
+.footer-line {
+  border-top: 2px solid white;
+  margin: 0;
+>>>>>>> 081e7b7cf4ea8e423553689be10c0899bb8876ba
 }
 
 .icon-footer {
   font-size: 1.5rem;
+<<<<<<< HEAD
   color: var(--silver);
 }
 
@@ -17,3 +31,15 @@
   color: white;
   transition: color 0.3s ease;
 }
+=======
+}
+
+.footer a {
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  color: white;
+}
+>>>>>>> 081e7b7cf4ea8e423553689be10c0899bb8876ba

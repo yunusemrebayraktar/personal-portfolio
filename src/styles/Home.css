@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .home {
   height: 80vh;
 }
@@ -7,3 +8,11 @@
   font-weight: bold;
   color: white;
 }
+=======
+.welcome-message {
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+  }
+  
+>>>>>>> 081e7b7cf4ea8e423553689be10c0899bb8876ba
