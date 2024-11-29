@@ -1,0 +1,33 @@
+.contact-container {
+  color: var(--light);
+  height: 80vh;
+}
+
+.contact-heading {
+  font-size: 2.5rem;
+  color: var(--light);
+  margin-bottom: 30px;
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.contact-link {
+  color: var(--light);
+  transition: color 0.3s ease;
+}
+
+.contact-link:hover {
+  color: var(--azure-web);
+}
+
+.contact-link svg {
+  transition: transform 0.3s ease;
+}
+
+.contact-link:hover svg {
+  transform: scale(1.2);
+}
