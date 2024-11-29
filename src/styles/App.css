@@ -1,0 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&display=swap");
+
+:root {
+  --dark: rgba(30, 21, 42, 1);
+  --light: rgb(228, 230, 228);
+  --silver: rgba(192, 197, 193, 1);
+  --red: rgba(164, 22, 35, 1);
+  --teal: rgba(33, 131, 128, 1);
+  --orange: rgba(232, 135, 30, 1);
+}
+
+body {
+  font-family: "Crimson Pro", serif;
+  background-color: var(--teal);
+}
+
+
+

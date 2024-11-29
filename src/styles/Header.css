@@ -1,0 +1,25 @@
+.bg-header {
+    background-color: var(--dark);
+}
+
+.name {
+  color: var(--light);
+  font-size: 2rem;
+}
+
+.navigation-link {
+  text-decoration: none;
+  position: relative;
+  color: var(--silver);
+  padding: 5px 10px;
+  transition: color 0.2s ease;
+}
+
+.navigation-link:hover,
+.navigation-link:hover .icon-header {
+    color: white;
+  }
+
+.icon-header {
+  font-size: 1.5rem;
+}

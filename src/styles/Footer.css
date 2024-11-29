@@ -1,0 +1,26 @@
+.footer {
+  background-color: var(--dark);
+  color: var(--light);
+}
+
+.copyright {
+  color: var(--light);
+}
+
+.footer-line {
+  border-top: 2px solid white;
+  margin: 0;
+}
+
+.icon-footer {
+  font-size: 1.5rem;
+}
+
+.footer a {
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  color: white;
+}
