@@ -1,10 +1,7 @@
 .bg-header {
     background-color: var(--dark);
-<<<<<<< HEAD
     border-bottom: 2px solid var(--silver);
     height: 10vh;
-=======
->>>>>>> 081e7b7cf4ea8e423553689be10c0899bb8876ba
 }
 
 .name {

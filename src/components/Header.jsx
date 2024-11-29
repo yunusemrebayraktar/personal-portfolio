@@ -1,21 +1,12 @@
 import React from 'react';
-<<<<<<< HEAD
 import '../styles/Header.css';
 import { Link } from 'react-router-dom';
 import { LINKS } from "./Constants";
-=======
-import { Link } from 'react-router-dom';
-import '../styles/Header.css';
->>>>>>> 081e7b7cf4ea8e423553689be10c0899bb8876ba
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 
 const Header = () => {
   return (
-<<<<<<< HEAD
     <header className="bg-header py-2 d-flex align-items-center">
-=======
-    <header className="bg-header py-2">
->>>>>>> 081e7b7cf4ea8e423553689be10c0899bb8876ba
       <nav className="container d-flex justify-content-between align-items-center">
         <div className="d-flex">
           <h1 className="name me-4">Yunus Emre Bayraktar</h1>
@@ -26,17 +17,10 @@ const Header = () => {
           <Link to="/pics" className="navigation-link mx-2">Pics</Link>
           <Link to="/books" className="navigation-link mx-2">Books</Link>
           <Link to="/work-education" className="navigation-link mx-2">Work / Education History</Link>
-<<<<<<< HEAD
           <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="navigation-link">
             <FaLinkedin className="icon-header" />
           </a>
           <a href={LINKS.github} target="_blank" rel="noopener noreferrer" className="navigation-link">
-=======
-          <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="navigation-link">
-            <FaLinkedin className="icon-header" />
-          </a>
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="navigation-link">
->>>>>>> 081e7b7cf4ea8e423553689be10c0899bb8876ba
             <FaGithub className="icon-header" />
           </a>
         </div>
