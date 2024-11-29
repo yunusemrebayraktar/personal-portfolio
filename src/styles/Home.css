@@ -2,6 +2,18 @@
   height: 80vh;
 }
 
+.home-name {
+  font-size: 3rem;
+  font-style: italic;
+  color: #0d1319; 
+  font-size: 2.8rem; 
+  color: transparent; 
+  -webkit-text-stroke: 1px white; 
+  font-weight: bold; 
+  text-transform: uppercase; 
+  text-align: center; 
+}
+
 .welcome-message {
   font-size: 2.5rem;
   font-weight: bold;
