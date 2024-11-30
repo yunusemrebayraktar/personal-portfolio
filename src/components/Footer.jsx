@@ -5,7 +5,7 @@ import { FaLinkedin, FaGithub } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="footer d-flex align-items-center">
+    <div className="footer d-flex align-items-center">
       <div className="container">
         <div className="d-flex justify-content-between align-items-center">
           <p className="copyright mb-0">&copy; 2024 Yunus Emre Bayraktar</p>
@@ -29,7 +29,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
+    </div>
   );
 };
 

@@ -1,4 +1,31 @@
+.card {
+  width: 190px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 0;
+}
+
+.card-image-container {
+  height: 290px;
+  background-color: var(--blue1);
+}
+
+.card-body {
+  border-top: 1px solid var(--dark);
+  background-color: var(--light);
+  padding: 0.5rem 1rem;
+}
+
 .books {
-    color: var(--light);
-    height: 80vh;
+  min-height: 80vh;
+  background-color: rgba(28, 89, 175, 0.5);
+}
+
+.note {
+  color: var(--light);
+}
+
+.line {
+  border-top: 1px solid white;
+  width: 100%;
 }

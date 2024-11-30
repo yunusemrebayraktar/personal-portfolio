@@ -1,15 +1,15 @@
 .footer {
   background-color: var(--bg);
-  height: 10vh;
+  height: 10vh !important;
 }
 
 .copyright {
-  color: var(--silver);
+  color: var(--light);
 }
 
 .icon-footer {
   font-size: 1.5rem;
-  color: var(--silver);
+  color: var(--light);
 }
 
 .icon-footer:hover {

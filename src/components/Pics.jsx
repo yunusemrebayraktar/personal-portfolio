@@ -1,7 +1,6 @@
 import React from "react";
-import { LINKS } from "./Constants";
-import { FaLinkedin, FaGithub, FaEnvelope } from "react-icons/fa";
 import "../styles/Pics.css";
+import transition from "../transition";
 
 const Pics = () => {
   return (
@@ -11,4 +10,4 @@ const Pics = () => {
   );
 };
 
-export default Pics;
+export default transition(Pics);

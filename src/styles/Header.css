@@ -1,8 +1,8 @@
 .bg-header {
     background-color: rgba(10, 10, 10, 0.3);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    height: 10vh;
-    z-index: 5;
+    height: 10vh !important;
+    z-index: 1;
 }
 
 .name {

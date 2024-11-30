@@ -6,7 +6,7 @@ import { FaLinkedin, FaGithub } from "react-icons/fa";
 
 const Header = () => {
   return (
-    <header className="bg-header py-2 d-flex align-items-center">
+    <div className="bg-header py-2 d-flex align-items-center">
       <nav className="container d-flex justify-content-between align-items-center">
         <div className="d-flex">
           <h1 className="name m-0">Yunus Emre Bayraktar</h1>
@@ -25,7 +25,7 @@ const Header = () => {
           </a>
         </div>
       </nav>
-    </header>
+    </div>
   );
 };
 

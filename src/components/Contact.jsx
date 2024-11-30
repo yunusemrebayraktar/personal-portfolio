@@ -2,6 +2,7 @@ import React from "react";
 import { LINKS } from "./Constants";
 import { FaLinkedin, FaGithub, FaEnvelope } from "react-icons/fa";
 import "../styles/Contact.css";
+import transition from "../transition";
 
 const Contact = () => {
   return (
@@ -22,4 +23,4 @@ const Contact = () => {
   );
 };
 
-export default Contact;
+export default transition(Contact);

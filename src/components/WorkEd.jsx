@@ -1,7 +1,6 @@
 import React from "react";
-import { LINKS } from "./Constants";
-import { FaLinkedin, FaGithub, FaEnvelope } from "react-icons/fa";
 import "../styles/WorkEd.css";
+import transition from "../transition";
 
 const WorkEd = () => {
   return (
@@ -12,4 +11,4 @@ const WorkEd = () => {
   );
 };
 
-export default WorkEd;
+export default transition(WorkEd);
