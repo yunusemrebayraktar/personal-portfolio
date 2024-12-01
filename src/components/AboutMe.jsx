@@ -34,11 +34,11 @@ const AboutMe = () => {
             where I studied at{" "}
             <span className="highlight"> Istanbul Technical University</span>.
             Over time, I’ve honed my skills in{" "}
-            <span className="highlight"> React.js</span> and contributed to
+            <span className="highlight"> React.js</span> and currently working on
             development of
             <span className="highlight">
               {" "}
-              DigiNanny portfolio website and mobile app.
+              DigiNanny portfolio website and mobile app
             </span>
             .
           </p>
