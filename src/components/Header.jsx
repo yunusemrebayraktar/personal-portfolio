@@ -13,10 +13,10 @@ const Header = () => {
         </div>
         <div className="d-flex align-items-center">
           <Link to="/" className="navigation-link mx-2">Home</Link>
-          <Link to="/pics" className="navigation-link mx-2">Pics</Link>
+          <Link to="/about" className="navigation-link mx-2">About Me</Link>
           <Link to="/books" className="navigation-link mx-2">Books</Link>
+          <Link to="/poems" className="navigation-link mx-2">Poems</Link>
           <Link to="/contact" className="navigation-link mx-2">Contact</Link>
-          <Link to="/work-education" className="navigation-link mx-2">Work / Education History</Link>
           <a href={LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="navigation-link">
             <FaLinkedin className="icon-header" />
           </a>

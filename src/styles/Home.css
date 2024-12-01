@@ -1,19 +1,84 @@
-.home {
+.hero-section {
   height: 80vh;
+  padding: 20px;
+  background-color: var(--darkblue);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-image-container {
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  width: 200px;
+  height: auto;
+  border-radius: 0%;
+  border: 3px solid white;
+}
+
+.intro-text {
+  text-align: center;
 }
 
 .home-name {
-  font-size: 3rem;
-  font-style:normal;
-  color: #ffffff; 
-  font-size: 2.8rem;  
-  font-weight: bold; 
-  text-transform: uppercase; 
-  text-align: center; 
-}
-
-.welcome-message {
   font-size: 2.5rem;
   font-weight: bold;
+}
+
+.job-title {
+  font-size: 1.8rem;
+  color: var(--yellow);
+}
+
+.skills-section {
+  padding: 40px 20px;
+  background-color: var(--gray);
   color: white;
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.skills-list li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--gray2);
+  padding: 20px 10px;
+  border-radius: 5px;
+  width: 120px;
+}
+
+.skills-list li p {
+  font-size: 1.2rem;
+  color: var(--light);
+  margin: 0px;
+}
+
+
+.history-section {
+  padding: 40px 20px;
+  background-color: var(--gray2);
+  color: white;
+}
+
+.history-item {
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--light);
+}
+
+.separator-line {
+  width: 30%;
+  height: 1.6px;
+  background-color: white;
+  margin: 10px auto;
 }

@@ -4,26 +4,27 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
 import Contact from "./components/Contact";
-import Pics from "./components/Pics";
 import Books from "./components/Books";
-import WorkEd from "./components/WorkEd";
+import PoemDetail from "./components/PoemDetails"; // Import the new component
 import "./App.css";
 import { AnimatePresence } from "framer-motion";
-
+import AboutMe from "./components/AboutMe";
+import Poems from "./components/Poems";
 
 function App() {
   const location = useLocation();
-  
+
   return (
     <>
       <Header />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route index element={<Home />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/pics" element={<Pics />} />
+          <Route path="/about" element={<AboutMe />} />
           <Route path="/books" element={<Books />} />
-          <Route path="/work-education" element={<WorkEd />} />
+          <Route path="/poems" element={<Poems />} />
+          <Route path="/poem/:title" element={<PoemDetail />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </AnimatePresence>
       <Footer />

@@ -1,0 +1,24 @@
+.poem-detail {
+  min-height: 80vh;
+  background-color: var(--darkblue);
+  padding: 20px;
+  background-color: var(--darkblue);
+  color: var(--light);
+}
+
+.poem-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.poem-detail h1 {
+  margin-bottom: 20px;
+}
+
+.poem-detail .poem-content {
+  font-size: 14pt;
+  line-height: 1.6;
+  color: #e6e6e6;
+}

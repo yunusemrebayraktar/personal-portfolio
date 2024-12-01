@@ -1,6 +1,7 @@
 .contact-container {
   color: var(--light);
   height: 80vh;
+  background-color: var(--darkblue);
 }
 
 .contact-heading {

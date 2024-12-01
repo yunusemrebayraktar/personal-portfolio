@@ -1,0 +1,77 @@
+.poems {
+  min-height: 80vh;
+  background-color: var(--darkblue);
+}
+
+.poems-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.poem-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 280px;
+  height: 300px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 0;
+  margin: 0;
+  background-color: var(--gray);
+  color: var(--light);
+  padding: 0.5rem 1rem;
+}
+
+.poem-card p {
+  text-align: left;
+  font-size: 9pt;
+  line-height: 1.6;
+  color: #e6e6e6;
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  line-clamp: 10;
+  -webkit-line-clamp: 10;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+.poem-card.full-poem p {
+  line-clamp: 7;
+  -webkit-line-clamp: unset; /* No limit, show the full poem */
+}
+
+.poem-card h5 {
+  margin-bottom: 0.4rem; 
+}
+
+.button {
+  padding: 6px 0;
+  font-size: 16px;
+  color: white;
+  background-color: var(--darkblue);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: var(--bg);
+}
+
+
+.line {
+  border-top: 1px solid white;
+  width: 100%;
+}
