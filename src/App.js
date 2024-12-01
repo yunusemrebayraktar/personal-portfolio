@@ -19,7 +19,7 @@ function App() {
       <Header />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route path="/personal-portfolio" element={<Home />} />
+          <Route index element={<Home />} />
           <Route path="/about" element={<AboutMe />} />
           <Route path="/books" element={<Books />} />
           <Route path="/poems" element={<Poems />} />
