@@ -33,7 +33,7 @@ const Poems = () => {
                   className="button mt-auto"
                   onClick={() => handleReadMore(poem.title)}
                 >
-                  Read More
+                  Devamını Oku
                 </button>
               </div>
             </div>
