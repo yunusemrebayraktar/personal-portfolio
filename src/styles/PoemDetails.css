@@ -1,24 +1,96 @@
-.poem-detail {
-  min-height: 80vh;
-  background-color: var(--darkblue);
-  padding: 20px;
-  background-color: var(--darkblue);
-  color: var(--light);
+.poem-details {
+  min-height: 100vh;
+  background-color: var(--color-background);
+  padding: var(--spacing-2xl) 0;
 }
 
-.poem-container {
-  width: 100%;
-  max-width: 1000px;
+.poem-details-container {
+  max-width: 800px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 var(--spacing-md);
 }
 
-.poem-detail h1 {
-  margin-bottom: 20px;
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-md);
+  cursor: pointer;
+  transition: all var(--transition-speed) var(--transition-timing);
+  margin-bottom: var(--spacing-xl);
 }
 
-.poem-detail .poem-content {
-  font-size: 14pt;
-  line-height: 1.6;
-  color: #e6e6e6;
+.back-button:hover {
+  color: var(--color-accent);
+  transform: translateX(-4px);
+}
+
+.poem-content {
+  background-color: var(--color-surface);
+  padding: var(--spacing-2xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.poem-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.poem-title {
+  font-size: var(--font-size-3xl);
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: var(--line-height-tight);
+  position: relative;
+  display: inline-block;
+}
+
+.poem-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--color-accent);
+  border-radius: var(--radius-full);
+}
+
+.poem-text {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-relaxed);
+  text-align: left;
+}
+
+.poem-line {
+  margin: 0 0 var(--spacing-md);
+}
+
+.poem-not-found {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--color-text-secondary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .poem-details {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .poem-content {
+    padding: var(--spacing-xl);
+  }
+
+  .poem-text {
+    font-size: var(--font-size-md);
+  }
 }

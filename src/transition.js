@@ -4,10 +4,16 @@ import React from "react";
 const transition = (OgComponent) => {
   return () => (
     <motion.div
-      initial={{ opacity: 0}}
-      animate={{ opacity: 1}}
-      exit={{ opacity: 0}}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      style={{ 
+        backgroundColor: 'var(--color-background)',
+        minHeight: '100vh',
+        width: '100%',
+        position: 'relative'
+      }}
     >
       <OgComponent />
     </motion.div>

@@ -1,46 +1,65 @@
-import React from "react";
-import "../styles/Poems.css";
-import { processPoemContent } from "../utils/processPoem";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { FaSearch, FaBookOpen } from "react-icons/fa";
 import poemsData from "../data/poemsData.json";
+import "../styles/Poems.css";
 import transition from "../transition";
-import { useNavigate } from "react-router-dom";
 
 const Poems = () => {
-  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const handleReadMore = (title) => {
-    // Navigate to a unique page for the poem using the lowercase title
-    navigate(`/poem/${title.toLowerCase().replace(/\s+/g, '-')}`);
-  };
+  const filteredPoems = poemsData.filter(poem =>
+    poem.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className="poems">
-      <div className="poems-container">
-        <h1 className="note text-center mb-0 pt-3">Poems</h1>
-        <div className="line my-3 py-auto"></div>
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 ">
-          {poemsData.map((poem) => (
-            <div className="col text-center pb-3 card-container" key={poem.title}>
-              <div className="poem-card">
-                <h5>{poem.title}</h5>
-                <p
-                  className="pt-2"
-                  dangerouslySetInnerHTML={{
-                    __html: processPoemContent(poem.poem),
-                  }}
-                ></p>
-                <button
-                  className="button mt-auto"
-                  onClick={() => handleReadMore(poem.title)}
-                >
-                  Devamını Oku
-                </button>
-              </div>
-            </div>
+    <main className="poems">
+      <div className="container poems-container">
+        <header className="poems-header">
+          <h1 className="poems-title">My Poems</h1>
+          <p className="poems-subtitle">
+            A collection of my thoughts and emotions in verse
+          </p>
+          <div className="search-container">
+            <FaSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search poems by title..."
+              className="search-input"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </header>
+
+        <div className="poems-grid">
+          {filteredPoems.map((poem, index) => (
+            <Link
+              to={`/poem/${encodeURIComponent(poem.title)}`}
+              key={index}
+              className="poem-card"
+            >
+              <article className="poem-card-content">
+                <FaBookOpen className="poem-icon" />
+                <h2 className="poem-title">{poem.title}</h2>
+                <p className="poem-preview">
+                  {poem.poem.split('\n')[0].substring(0, 100)}...
+                </p>
+                <span className="read-more">
+                  Read More <span className="arrow">→</span>
+                </span>
+              </article>
+            </Link>
           ))}
         </div>
+
+        {filteredPoems.length === 0 && (
+          <div className="no-results">
+            <p>No poems found matching your search.</p>
+          </div>
+        )}
       </div>
-    </div>
+    </main>
   );
 };
 

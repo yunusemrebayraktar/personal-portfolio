@@ -1,33 +1,55 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 import poemsData from "../data/poemsData.json";
-import { processPoemContent } from "../utils/processPoem";
-import transition from "../transition";
 import "../styles/PoemDetails.css";
+import transition from "../transition";
 
-const PoemDetail = () => {
-  const { title } = useParams(); // Get the lowercase poem title from the URL
-  const poem = poemsData.find(
-    (poem) => poem.title.toLowerCase().replace(/\s+/g, "-") === title
-  ); // Find the poem by the lowercase title
+const PoemDetails = () => {
+  const { title } = useParams();
+  const navigate = useNavigate();
+  const poem = poemsData.find(p => p.title === decodeURIComponent(title));
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!poem) {
-    return <div>Poem not found</div>;
+    return (
+      <div className="poem-not-found">
+        <h1>Poem not found</h1>
+        <button onClick={() => navigate('/poems')} className="back-button">
+          Return to Poems
+        </button>
+      </div>
+    );
   }
 
   return (
-    <div className="poem-detail">
-      <div className="poem-container">
-        <h1>{poem.title}</h1>
-        <div
-          className="poem-content"
-          dangerouslySetInnerHTML={{
-            __html: processPoemContent(poem.poem),
-          }}
-        ></div>
+    <main className="poem-details">
+      <div className="container poem-details-container">
+        <button onClick={() => navigate('/poems')} className="back-button">
+          <FaArrowLeft /> Back to Poems
+        </button>
+
+        <article className="poem-content">
+          <header className="poem-header">
+            <h1 className="poem-title">{poem.title}</h1>
+          </header>
+
+          <div className="poem-text">
+            {poem.poem.split('\n').map((line, index) => (
+              line.trim() ? (
+                <p key={index} className="poem-line">{line}</p>
+              ) : (
+                <br key={index} />
+              )
+            ))}
+          </div>
+        </article>
       </div>
-    </div>
+    </main>
   );
 };
 
-export default transition(PoemDetail);
+export default transition(PoemDetails);

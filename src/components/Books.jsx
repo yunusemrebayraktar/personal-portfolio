@@ -1,55 +1,118 @@
 import React, { useState, useEffect } from "react";
-import BookCard from "./BookCard.jsx";
-import books from "../data/bookData.js";
-import transition from "../transition";
 import "../styles/Books.css";
+import { FaSearch, FaSpinner } from "react-icons/fa";
+import transition from "../transition";
 
 const Books = () => {
-  const [bookCovers, setBookCovers] = useState([]);
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [error, setError] = useState(null);
 
+  // Fetch books on component mount
   useEffect(() => {
-    const fetchBookCovers = async () => {
-      const updatedBooks = await Promise.all(
-        books.map(async (book) => {
-          const response = await fetch(
-            `https://openlibrary.org/api/books?bibkeys=ISBN:${book.isbn}&format=json&jscmd=data`
-          );
-          const data = await response.json();
-          const coverUrl = data[`ISBN:${book.isbn}`]?.cover?.large;
-
-          return {
-            ...book,
-            cover: coverUrl || "https://via.placeholder.com/150", // Fallback if no cover found
-          };
-        })
-      );
-      setBookCovers(updatedBooks);
-    };
-
-    fetchBookCovers();
+    fetchBooks();
   }, []);
 
+  const fetchBooks = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('http://localhost:8000/api/books');
+      if (!response.ok) throw new Error('Failed to fetch books');
+      const data = await response.json();
+      setBooks(data);
+    } catch (error) {
+      console.error("Error fetching books:", error);
+      setError("Failed to load books. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredBooks = books.filter(book =>
+    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    book.author.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="books">
-      <div className="container">
-        <h3 className="note text-center mb-0 pt-3">
-          List of Books I've Read So Far. A Library to Myself.
-        </h3>
-        <div className="line my-3 py-auto"></div>
-        <div className="d-flex justify-content-center align-items-center pb-3">
-          <div className="row row-cols-2 row-cols-md-3 row-cols-lg-5">
-            {bookCovers.map((book, index) => (
-              <BookCard
-                key={index}
-                title={book.title}
-                author={book.author}
-                cover={book.cover} // Use the dynamically fetched cover
-              />
+    <main className="books">
+      <div className="container books-container">
+        <header className="books-header">
+          <h1 className="books-title">My Reading List</h1>
+          <p className="books-subtitle">
+            A collection of books that have shaped my perspective
+          </p>
+          <div className="search-container">
+            <FaSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search my books..."
+              className="search-input"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </header>
+
+        {error && (
+          <div className="error-message">
+            {error}
+            <button onClick={() => setError(null)}>Dismiss</button>
+          </div>
+        )}
+
+        {loading ? (
+          <div className="loading-container">
+            <FaSpinner className="loading-spinner" />
+            <p>Loading books...</p>
+          </div>
+        ) : (
+          <div className="books-grid">
+            {filteredBooks.map((book, index) => (
+              <article key={index} className="book-card">
+                <div className="book-content">
+                  <div className="book-cover-container">
+                    <img
+                      src={book.image || `https://covers.openlibrary.org/b/isbn/${book.isbn}-L.jpg`}
+                      alt={`Cover of ${book.title}`}
+                      className="book-cover"
+                      onError={(e) => {
+                        e.target.src = "https://via.placeholder.com/200x300?text=No+Cover";
+                      }}
+                    />
+                  </div>
+                  <div className="book-info">
+                    <h2 className="book-title">
+                      {book.link ? (
+                        <a 
+                          href={book.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {book.title}
+                        </a>
+                      ) : (
+                        book.title
+                      )}
+                    </h2>
+                    <p className="book-author">by {book.author}</p>
+                    {book.publisher && (
+                      <p className="book-publisher">{book.publisher}</p>
+                    )}
+                  </div>
+                </div>
+              </article>
             ))}
           </div>
-        </div>
+        )}
+
+        {!loading && filteredBooks.length === 0 && (
+          <div className="no-results">
+            <p>No books found matching your search.</p>
+          </div>
+        )}
       </div>
-    </div>
+    </main>
   );
 };
 
