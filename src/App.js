@@ -9,8 +9,7 @@ import Books from "./components/Books";
 import Poems from "./components/Poems";
 import PoemDetail from "./components/PoemDetails";
 import Contact from "./components/Contact";
-import "./styles/global.css";
-import "./App.css";
+import "./styles/globals.css";
 
 function App() {
   const location = useLocation();

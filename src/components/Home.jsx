@@ -11,7 +11,12 @@ import {
   FaPhp,
   FaBootstrap,
   FaDatabase,
+  FaGitAlt,
+  FaDocker,
+  FaFigma,
+  FaJira,
 } from "react-icons/fa";
+import { SiVisualstudiocode, SiPostman } from "react-icons/si";
 
 const Home = () => {
   return (
@@ -20,23 +25,43 @@ const Home = () => {
         <div className="container hero-container">
           <div className="hero-content">
             <div className="hero-text">
-              <h1 className="hero-title">
-                <span className="greeting">Hello, I'm</span>
-                <span className="name">Yunus Emre Bayraktar</span>
-              </h1>
+              <span className="greeting">Hello, I'm</span>
+              <span className="name">Yunus Emre Bayraktar</span>
               <h2 className="hero-subtitle">Software Developer</h2>
               <p className="hero-description">
                 Passionate about creating applications with LLM based backend and React.js frontend development
               </p>
             </div>
-            <div className="hero-image">
-              <div className="profile-image-wrapper">
-                <img 
-                  src={profile} 
-                  alt="Yunus Emre Bayraktar" 
-                  className="profile-image"
-                />
-              </div>
+            <div className="profile-image-wrapper">
+              <img 
+                src={profile} 
+                alt="Yunus Emre Bayraktar" 
+                className="profile-image"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="languages-section">
+        <div className="container">
+          <h2 className="section-title">Languages</h2>
+          <div className="languages-grid">
+            <div className="language-card">
+              <h3 className="language-name">Turkish</h3>
+              <p className="language-level">Native Language</p>
+            </div>
+            <div className="language-card">
+              <h3 className="language-name">English</h3>
+              <p className="language-level">Professional Working Proficiency</p>
+            </div>
+            <div className="language-card">
+              <h3 className="language-name">Russian</h3>
+              <p className="language-level">Elementary Proficiency</p>
+            </div>
+            <div className="language-card">
+              <h3 className="language-name">Spanish</h3>
+              <p className="language-level">Currently Learning</p>
             </div>
           </div>
         </div>
@@ -59,6 +84,27 @@ const Home = () => {
               <div key={index} className="skill-card">
                 <skill.icon className="skill-icon" />
                 <p className="skill-name">{skill.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="tools-section">
+        <div className="container">
+          <h2 className="section-title">Development Tools</h2>
+          <div className="tools-grid">
+            {[
+              { icon: FaGitAlt, name: "Git" },
+              { icon: SiVisualstudiocode, name: "VS Code" },
+              { icon: FaDocker, name: "Docker" },
+              { icon: SiPostman, name: "Postman" },
+              { icon: FaFigma, name: "Figma" },
+              { icon: FaJira, name: "Jira" },
+            ].map((tool, index) => (
+              <div key={index} className="tool-card">
+                <tool.icon className="tool-icon" />
+                <p className="tool-name">{tool.name}</p>
               </div>
             ))}
           </div>

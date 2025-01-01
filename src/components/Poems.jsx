@@ -20,15 +20,17 @@ const Poems = () => {
           <p className="poems-subtitle">
             A collection of my thoughts and emotions in verse
           </p>
-          <div className="search-container">
-            <FaSearch className="search-icon" />
-            <input
-              type="text"
-              placeholder="Search poems by title..."
-              className="search-input"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+          <div className="poems-search-container">
+            <div className="poems-search-wrapper">
+              <FaSearch className="poems-search-icon" />
+              <input
+                type="text"
+                placeholder="Search poems by title..."
+                className="poems-search-input"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </div>
         </header>
 
