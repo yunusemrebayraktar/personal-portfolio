@@ -45,7 +45,7 @@ const Poems = () => {
                 <FaBookOpen className="poem-icon" />
                 <h2 className="poem-title">{poem.title}</h2>
                 <p className="poem-preview">
-                  {poem.poem.split('\n')[0].substring(0, 100)}...
+                  {poem.poem.split('\n')[0]}...
                 </p>
                 <span className="read-more">
                   Read More <span className="arrow">→</span>

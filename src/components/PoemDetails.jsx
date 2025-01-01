@@ -38,12 +38,13 @@ const PoemDetails = () => {
           </header>
 
           <div className="poem-text">
-            {poem.poem.split('\n').map((line, index) => (
-              line.trim() ? (
-                <p key={index} className="poem-line">{line}</p>
-              ) : (
-                <br key={index} />
-              )
+            {poem.poem.split('\n').map((line, index, array) => (
+              <p 
+                key={index} 
+                className={`poem-line ${index === array.length - 1 ? 'poem-author-date' : ''}`}
+              >
+                {line}
+              </p>
             ))}
           </div>
         </article>
