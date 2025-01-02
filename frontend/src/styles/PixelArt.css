@@ -1,0 +1,81 @@
+.pixel-art {
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: var(--background);
+  color: var(--text);
+}
+
+.pixel-art-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.pixel-art-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.pixel-art-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--primary);
+}
+
+.pixel-art-header p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.pixel-art-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.pixel-art-item {
+  background: var(--card-background);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.pixel-art-image-wrapper {
+  position: relative;
+  padding-top: 100%; /* 1:1 Aspect Ratio */
+  overflow: hidden;
+}
+
+.pixel-art-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: var(--card-background);
+  image-rendering: pixelated; /* This makes pixel art look crisp */
+  padding: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pixel-art {
+    padding: 1rem;
+  }
+
+  .pixel-art-container {
+    padding: 1rem;
+  }
+
+  .pixel-art-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .pixel-art-header h1 {
+    font-size: 2rem;
+  }
+} 

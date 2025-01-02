@@ -9,6 +9,7 @@ import Books from "./components/Books";
 import Poems from "./components/Poems";
 import PoemDetail from "./components/PoemDetails";
 import Contact from "./components/Contact";
+import PixelArt from "./components/PixelArt";
 import "./styles/globals.css";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             <Route path="/books" element={<Books />} />
             <Route path="/poems" element={<Poems />} />
             <Route path="/poem/:title" element={<PoemDetail />} />
+            <Route path="/pixel-art" element={<PixelArt />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
         </AnimatePresence>

@@ -40,6 +40,12 @@ const Header = () => {
             Poems
           </NavLink>
           <NavLink 
+            to="/pixel-art" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            Pixel Art
+          </NavLink>
+          <NavLink 
             to="/contact" 
             className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
           >
