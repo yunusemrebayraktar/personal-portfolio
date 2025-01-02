@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from pydantic import BaseModel
+import math
 
 app = FastAPI()
 
@@ -35,51 +36,66 @@ def get_db():
     conn.row_factory = sqlite3.Row  # This enables column access by name
     return conn
 
-@app.get("/api/books", response_model=BookResponse)
-async def get_books(
-    page: int = Query(1, ge=1),
-    per_page: int = Query(12, ge=1, le=50)
-):
+@app.get("/api/books")
+async def get_books(page: int = 1, search: str = None):
+    per_page = 12
+    offset = (page - 1) * per_page
+    
     try:
-        conn = get_db()
+        conn = sqlite3.connect('books.db')
         cursor = conn.cursor()
-
-        # Get total count
-        cursor.execute('SELECT COUNT(*) FROM books')
-        total_books = cursor.fetchone()[0]
-
-        # Get paginated books
-        cursor.execute('''
-            SELECT title, author, publisher, image, link
-            FROM books
-            ORDER BY id DESC
-            LIMIT ? OFFSET ?
-        ''', (per_page, (page - 1) * per_page))
         
-        books = [
-            Book(
-                title=row['title'],
-                author=row['author'],
-                publisher=row['publisher'],
-                image=row['image'],
-                link=row['link']
-            )
-            for row in cursor.fetchall()
-        ]
-
-        conn.close()
-
-        return BookResponse(
-            books=books,
-            total=total_books,
-            page=page,
-            per_page=per_page,
-            total_pages=(total_books + per_page - 1) // per_page
-        )
-
-    except Exception as e:
-        print(f"Error in get_books: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        # Base query
+        query = "SELECT * FROM books"
+        count_query = "SELECT COUNT(*) FROM books"
+        params = []
+        
+        # Add search condition if search parameter is provided
+        if search:
+            search = f"%{search}%"
+            query += " WHERE title LIKE ? OR author LIKE ? OR publisher LIKE ?"
+            count_query += " WHERE title LIKE ? OR author LIKE ? OR publisher LIKE ?"
+            params.extend([search, search, search])
+        
+        # Add sorting
+        query += " ORDER BY id DESC"
+        
+        # Get total count for pagination
+        cursor.execute(count_query, params)
+        total_count = cursor.fetchone()[0]
+        total_pages = math.ceil(total_count / per_page)
+        
+        # Add pagination
+        query += " LIMIT ? OFFSET ?"
+        params.extend([per_page, offset])
+        
+        # Execute final query
+        cursor.execute(query, params)
+        books = cursor.fetchall()
+        
+        # Convert to list of dictionaries
+        books_list = []
+        for book in books:
+            books_list.append({
+                "id": book[0],
+                "title": book[1],
+                "author": book[2],
+                "publisher": book[3],
+                "image": book[4],
+                "link": book[5]
+            })
+        
+        return {
+            "books": books_list,
+            "total_pages": total_pages,
+            "current_page": page
+        }
+        
+    except sqlite3.Error as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    finally:
+        if conn:
+            conn.close()
 
 if __name__ == "__main__":
     import uvicorn

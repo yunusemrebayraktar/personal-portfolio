@@ -109,44 +109,21 @@ def fetch_book(session: requests.Session, url: str, retries: int = 3):
                 soup.select_one('a[href*="/yayinevi/"]')
             )
 
-            # Try multiple image selectors
+            # Try to find the image URL
             image_url = None
             
-            # Method 1: Direct book cover image
-            image_elem = (
-                soup.select_one('a.js-jbox-book-cover img#js-book-cover') or
-                soup.select_one('img#js-book-cover') or
-                soup.select_one('div.image img[alt*="kapak"]') or
-                soup.select_one('div.product-image img') or
-                soup.select_one('div.pr_images__item img')
-            )
-            if image_elem and image_elem.get('src'):
-                image_url = image_elem.get('src')
+            # First try: Look for js-jbox-book-cover and get the img src inside it
+            book_cover = soup.select_one('a.js-jbox-book-cover img')
+            if book_cover and book_cover.get('src'):
+                image_url = book_cover.get('src')
+                print(f"Found image using js-jbox-book-cover img: {image_url}")
             
-            # Method 2: Look for data attributes
+            # Second try: Look for pr_images__thumb-link (for pages with multiple images)
             if not image_url:
-                image_elem = soup.select_one('[data-src], [data-image], [data-original]')
-                if image_elem:
-                    image_url = (
-                        image_elem.get('data-src') or
-                        image_elem.get('data-image') or
-                        image_elem.get('data-original')
-                    )
-            
-            # Method 3: Look for image in meta tags
-            if not image_url:
-                meta_image = soup.select_one('meta[property="og:image"]')
-                if meta_image:
-                    image_url = meta_image.get('content')
-
-            # Method 4: Try to construct image URL from product ID
-            if not image_url:
-                product_id = None
-                # Try to extract product ID from URL or page content
-                if 'kitap/' in url and '/' in url.split('kitap/')[-1]:
-                    product_id = url.split('kitap/')[-1].split('/')[1].split('.')[0]
-                if product_id:
-                    image_url = f'https://img.kitapyurdu.com/v1/getImage/fn:{product_id}/wh:true/wi:800'
+                thumb_link = soup.select_one('a.pr_images__thumb-link')
+                if thumb_link and thumb_link.get('href'):
+                    image_url = thumb_link.get('href').replace('wi:800', 'wi:220')
+                    print(f"Found image using pr_images__thumb-link: {image_url}")
 
             if not (title_elem and author_elem):
                 print("Missing required elements")
@@ -166,6 +143,8 @@ def fetch_book(session: requests.Session, url: str, retries: int = 3):
             print(f"Successfully fetched: {book_data['title']}")
             if not image_url:
                 print(f"Warning: No image found for {book_data['title']}")
+            else:
+                print(f"Image URL: {image_url}")
             return book_data
 
         except requests.Timeout:
@@ -177,63 +156,79 @@ def fetch_book(session: requests.Session, url: str, retries: int = 3):
     return None
 
 def update_database():
-    conn = setup_database()
-    cursor = conn.cursor()
+    try:
+        conn = setup_database()
+        cursor = conn.cursor()
 
-    # Load URLs
-    with open('book_urls.txt', 'r', encoding='utf-8') as f:
-        urls = [line.strip() for line in f if line.strip()]
+        # Load URLs
+        with open('book_urls.txt', 'r', encoding='utf-8') as f:
+            urls = [line.strip() for line in f if line.strip()]
 
-    # Get existing book URLs
-    cursor.execute('SELECT link FROM books')
-    existing_urls = {row[0] for row in cursor.fetchall()}
-    
-    # Filter out existing URLs
-    new_urls = [url for url in urls if url not in existing_urls]
-    
-    if not new_urls:
-        print("No new books to fetch!")
-        conn.close()
-        return
+        # Get existing book URLs
+        cursor.execute('SELECT link FROM books')
+        existing_urls = {row[0] for row in cursor.fetchall()}
         
-    print(f"Found {len(new_urls)} new books to fetch")
-
-    # Process URLs in batches
-    batch_size = 5
-    session = requests.Session()
-    
-    for i in range(0, len(new_urls), batch_size):
-        batch_urls = new_urls[i:i + batch_size]
-        print(f"\nProcessing batch {i//batch_size + 1} ({len(batch_urls)} URLs)")
-
-        for url in batch_urls:
-            book_data = fetch_book(session, url)
+        # Filter out existing URLs
+        new_urls = [url for url in urls if url not in existing_urls]
+        
+        if not new_urls:
+            print("No new books to fetch!")
+            conn.close()
+            return
             
-            if book_data:
-                # Insert new book
-                cursor.execute('''
-                    INSERT INTO books 
-                    (title, author, publisher, image, link, last_updated)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ''', (
-                    book_data['title'],
-                    book_data['author'],
-                    book_data['publisher'],
-                    book_data['image'],
-                    book_data['link'],
-                    datetime.now().isoformat()
-                ))
-                conn.commit()
-            
-            # Shorter delay between successful fetches
-            time.sleep(random.uniform(1, 2))
+        print(f"Found {len(new_urls)} new books to fetch")
 
-        # Shorter delay between batches
-        if i + batch_size < len(new_urls):
-            time.sleep(random.uniform(2, 4))
+        # Process URLs in batches
+        batch_size = 5
+        session = requests.Session()
+        
+        for i in range(0, len(new_urls), batch_size):
+            batch_urls = new_urls[i:i + batch_size]
+            print(f"\nProcessing batch {i//batch_size + 1} ({len(batch_urls)} URLs)")
 
-    conn.close()
-    print("Database update completed")
+            for url in batch_urls:
+                try:
+                    book_data = fetch_book(session, url)
+                    
+                    if book_data:
+                        try:
+                            # Insert new book
+                            cursor.execute('''
+                                INSERT INTO books 
+                                (title, author, publisher, image, link, last_updated)
+                                VALUES (?, ?, ?, ?, ?, ?)
+                            ''', (
+                                book_data['title'],
+                                book_data['author'],
+                                book_data['publisher'],
+                                book_data['image'],
+                                book_data['link'],
+                                datetime.now().isoformat()
+                            ))
+                            conn.commit()
+                            print(f"Successfully inserted: {book_data['title']}")
+                        except sqlite3.Error as e:
+                            print(f"Database error while inserting {book_data['title']}: {str(e)}")
+                            continue
+                except Exception as e:
+                    print(f"Error processing URL {url}: {str(e)}")
+                    continue
+                
+                # Shorter delay between successful fetches
+                time.sleep(random.uniform(1, 2))
+
+            # Shorter delay between batches
+            if i + batch_size < len(new_urls):
+                time.sleep(random.uniform(2, 4))
+
+        conn.close()
+        print("\nDatabase update completed successfully")
+        
+    except Exception as e:
+        print(f"\nError in update_database: {str(e)}")
+        if 'conn' in locals():
+            conn.close()
+        raise
 
 if __name__ == "__main__":
     update_database() 

@@ -3,225 +3,178 @@ import { motion } from "framer-motion";
 import { FaSearch } from "react-icons/fa";
 import "../styles/Books.css";
 import transition from "../transition";
+import { useDebounce } from "../useDebounce";
+import Loading from "./Loading";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalBooks, setTotalBooks] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const booksPerPage = 12;
+  const [totalPages, setTotalPages] = useState(1);
+  const [debouncedSearch] = useDebounce(searchQuery, 300);
+  const [shouldSearch, setShouldSearch] = useState(false);
 
   useEffect(() => {
-    fetchBooks(currentPage);
-  }, [currentPage]);
-
-  useEffect(() => {
-    if (searchQuery) {
+    // Reset to first page when search query changes and should search is true
+    if (shouldSearch) {
       setCurrentPage(1);
-      const filtered = books.filter((book) =>
-        book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        book.author.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setBooks(filtered);
-    } else {
-      fetchBooks(1);
+      setShouldSearch(false);
     }
-  }, [searchQuery]);
+  }, [shouldSearch]);
 
-  const fetchBooks = async (page) => {
-    try {
-      setLoading(true);
-      setError(null);
-      console.log(`Fetching books from backend... (Page ${page})`);
-      const response = await fetch(`http://localhost:8000/api/books?page=${page}&per_page=${booksPerPage}`);
-      console.log("Response status:", response.status);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const searchParam = searchQuery && shouldSearch ? `&search=${encodeURIComponent(searchQuery)}` : '';
+        const url = `http://localhost:8000/api/books?page=${currentPage}${searchParam}`;
+        console.log('Fetching books from:', url);
+        
+        const response = await fetch(url);
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Received data:', data);
+        
+        if (!data.books || !Array.isArray(data.books)) {
+          throw new Error('Received data is not in the expected format');
+        }
+        
+        setBooks(data.books);
+        setTotalPages(data.total_pages);
+      } catch (err) {
+        console.error('Error details:', err);
+        setError(
+          `Failed to fetch books. Please ensure the backend server is running at http://localhost:8000. Error: ${err.message}`
+        );
+      } finally {
+        setLoading(false);
       }
-      
-      const data = await response.json();
-      console.log("Received books:", data);
-      
-      if (!data.books || !Array.isArray(data.books)) {
-        throw new Error("Received data is not in the expected format!");
-      }
+    };
 
-      setBooks(data.books);
-      setTotalBooks(data.total);
-      setTotalPages(data.total_pages);
-    } catch (error) {
-      console.error("Error fetching books:", error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
+    fetchBooks();
+  }, [currentPage, shouldSearch, searchQuery]);
+
+  const handleSearch = (event) => {
+    if (event.key === 'Enter') {
+      setShouldSearch(true);
     }
   };
 
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchClick = () => {
+    setShouldSearch(true);
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (loading) {
-    return (
-      <div className="books-loading">
-        <div className="loading-spinner"></div>
-        <p>Loading books from backend...</p>
-        <p className="loading-subtitle">Connecting to http://localhost:8000/books</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
-    return (
-      <main className="books">
-        <div className="books-container">
-          <div className="books-error">
-            <h2>Error Loading Books</h2>
-            <p>{error}</p>
-            <div className="error-details">
-              <p>Please check:</p>
-              <ul>
-                <li>Backend server is running at http://localhost:8000</li>
-                <li>The books.db file exists in the backend directory</li>
-                <li>The SQLite database has been populated by running the scraper</li>
-              </ul>
-              <button onClick={fetchBooks} className="retry-button">
-                Retry Loading Books
-              </button>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
+    return <div className="error">{error}</div>;
   }
 
   return (
-    <main className="books">
+    <div className="books">
       <div className="books-container">
-        <header className="books-header">
-          <h1 className="books-title">My Reading List</h1>
-          <p className="books-subtitle">
-            A curated collection of books that have shaped my journey
-          </p>
+        <div className="books-header">
+          <h1>Books</h1>
           <div className="search-container">
             <div className="search-wrapper">
-              <FaSearch className="search-icon" />
+              <FaSearch className="search-icon" onClick={handleSearchClick} />
               <input
                 type="text"
-                placeholder="Search books by title or author..."
+                placeholder="Search by title, author or publisher..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearch}
                 className="search-input"
               />
             </div>
           </div>
-        </header>
+        </div>
 
-        {books.length === 0 ? (
-          <div className="no-books-message">
-            <h2>No Books Found</h2>
-            <p>The database appears to be empty. Please ensure:</p>
-            <ul>
-              <li>The books.db file exists in the backend directory</li>
-              <li>The scraper has been run to populate the database</li>
-              <li>The books table in SQLite has been created properly</li>
-            </ul>
-          </div>
-        ) : (
-          <>
-            <div className="books-grid">
-              {books.map((book, index) => (
-                <motion.div
-                  key={book.id || index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="book-card"
-                >
-                  <a href={book.link} target="_blank" rel="noopener noreferrer" className="book-link">
-                    <div className="book-image-wrapper">
-                      <img 
-                        src={book.image} 
-                        alt={book.title} 
-                        className="book-image"
-                        onError={(e) => {
-                          console.error(`Error loading image for book: ${book.title}`);
-                          e.target.src = 'placeholder-book.jpg';
-                        }}
-                      />
-                    </div>
-                    <div className="book-info">
-                      <h2 className="book-title">{book.title}</h2>
-                      <div className="book-details">
-                        <p className="book-author">{book.author}</p>
-                        {book.publisher && (
-                          <p className="book-publisher">{book.publisher}</p>
-                        )}
-                      </div>
-                    </div>
-                  </a>
-                </motion.div>
-              ))}
-            </div>
-
-            {totalPages > 1 && (
-              <div className="pagination">
-                {currentPage > 1 && (
-                  <button
-                    onClick={() => paginate(currentPage - 1)}
-                    className="pagination-button"
-                    aria-label="Previous page"
-                  >
-                    ←
-                  </button>
-                )}
-                
-                {Array.from({ length: totalPages }).map((_, index) => {
-                  if (
-                    index === 0 ||
-                    index === totalPages - 1 ||
-                    (index >= currentPage - 2 && index <= currentPage + 2)
-                  ) {
-                    return (
-                      <button
-                        key={index}
-                        onClick={() => paginate(index + 1)}
-                        className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
-                        aria-label={`Page ${index + 1}`}
-                        aria-current={currentPage === index + 1 ? 'page' : undefined}
-                      >
-                        {index + 1}
-                      </button>
-                    );
-                  } else if (
-                    index === currentPage - 3 ||
-                    index === currentPage + 3
-                  ) {
-                    return <span key={index} className="pagination-ellipsis">•••</span>;
-                  }
-                  return null;
-                })}
-
-                {currentPage < totalPages && (
-                  <button
-                    onClick={() => paginate(currentPage + 1)}
-                    className="pagination-button"
-                    aria-label="Next page"
-                  >
-                    →
-                  </button>
-                )}
+        <div className="books-grid">
+          {books.map((book) => (
+            <a key={book.id} href={book.link} target="_blank" rel="noopener noreferrer" className="book-link">
+              <div className="book-image-wrapper">
+                <img src={book.image} alt={book.title} className="book-image" />
               </div>
-            )}
-          </>
+              <div className="book-info">
+                <h2 className="book-title">{book.title}</h2>
+                <div className="book-details">
+                  <p className="book-author">{book.author}</p>
+                  <p className="book-publisher">{book.publisher}</p>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        {totalPages > 1 && (
+          <div className="pagination">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="pagination-button"
+            >
+              ←
+            </button>
+            
+            {[...Array(totalPages)].map((_, index) => {
+              const pageNum = index + 1;
+              // Show first page, last page, and 2 pages around current page
+              if (
+                pageNum === 1 ||
+                pageNum === totalPages ||
+                (pageNum >= currentPage - 2 && pageNum <= currentPage + 2)
+              ) {
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`pagination-button ${currentPage === pageNum ? 'active' : ''}`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              } else if (
+                pageNum === currentPage - 3 ||
+                pageNum === currentPage + 3
+              ) {
+                return <span key={pageNum} className="pagination-ellipsis">...</span>;
+              }
+              return null;
+            })}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="pagination-button"
+            >
+              →
+            </button>
+          </div>
         )}
       </div>
-    </main>
+    </div>
   );
 };
 
