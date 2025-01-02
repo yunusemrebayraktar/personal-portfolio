@@ -66,6 +66,15 @@
   text-align: center;
 }
 
+.books-description {
+  font-size: var(--font-size-lg);
+  color: var(--color-sage);
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  max-width: 600px;
+  margin: var(--spacing-md) auto var(--spacing-xl);
+}
+
 .search-container {
   position: relative;
   max-width: 500px;
@@ -486,4 +495,8 @@
   font-size: var(--font-size-md);
   line-height: 1.5;
   max-width: 400px;
+}
+
+.search-container {
+  margin-top: var(--spacing-lg);
 }

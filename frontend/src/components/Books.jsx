@@ -59,7 +59,7 @@ const Books = () => {
     }
     
     fetchBooks();
-  }, [currentPage, shouldSearch]);
+  }, [currentPage, shouldSearch, searchQuery]);
 
   const handleSearch = (event) => {
     if (event.key === 'Enter') {
@@ -113,6 +113,10 @@ const Books = () => {
       <div className="books-container">
         <div className="books-header">
           <h1>Books</h1>
+          <p className="books-description">
+            Welcome to my personal library! Here's a collection of books that have shaped my thoughts 
+            and sparked my imagination. Each one holds a special place in my journey.
+          </p>
           <div className="search-container">
             <div className="search-wrapper">
               <FaSearch className="search-icon" onClick={handleSearchClick} />
