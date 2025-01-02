@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaTimes } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 import "../styles/Books.css";
 import transition from "../transition";
-import { useDebounce } from "../useDebounce";
 import Loading from "./Loading";
 
 const Books = () => {
@@ -13,23 +12,15 @@ const Books = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [debouncedSearch] = useDebounce(searchQuery, 300);
   const [shouldSearch, setShouldSearch] = useState(false);
-
-  useEffect(() => {
-    // Reset to first page when search query changes and should search is true
-    if (shouldSearch) {
-      setCurrentPage(1);
-      setShouldSearch(false);
-    }
-  }, [shouldSearch]);
+  const [searchKey, setSearchKey] = useState(0);
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         setLoading(true);
         setError(null);
-        const searchParam = searchQuery && shouldSearch ? `&search=${encodeURIComponent(searchQuery)}` : '';
+        const searchParam = searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : '';
         const url = `http://localhost:8000/api/books?page=${currentPage}${searchParam}`;
         console.log('Fetching books from:', url);
         
@@ -61,8 +52,14 @@ const Books = () => {
       }
     };
 
+    if (shouldSearch) {
+      setCurrentPage(1);
+      setShouldSearch(false);
+      setSearchKey(prev => prev + 1);
+    }
+    
     fetchBooks();
-  }, [currentPage, shouldSearch, searchQuery]);
+  }, [currentPage, shouldSearch]);
 
   const handleSearch = (event) => {
     if (event.key === 'Enter') {
@@ -81,6 +78,26 @@ const Books = () => {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setShouldSearch(true);
+  };
+
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 }
   };
 
   if (loading) {
@@ -107,26 +124,64 @@ const Books = () => {
                 onKeyDown={handleSearch}
                 className="search-input"
               />
+              {searchQuery && (
+                <FaTimes 
+                  className="clear-icon" 
+                  onClick={handleClearSearch}
+                  aria-label="Clear search"
+                />
+              )}
             </div>
           </div>
         </div>
 
-        <div className="books-grid">
-          {books.map((book) => (
-            <a key={book.id} href={book.link} target="_blank" rel="noopener noreferrer" className="book-link">
-              <div className="book-image-wrapper">
-                <img src={book.image} alt={book.title} className="book-image" />
-              </div>
-              <div className="book-info">
-                <h2 className="book-title">{book.title}</h2>
-                <div className="book-details">
-                  <p className="book-author">{book.author}</p>
-                  <p className="book-publisher">{book.publisher}</p>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div 
+            className="books-grid"
+            variants={container}
+            initial="hidden"
+            animate="show"
+            key={searchKey}
+          >
+            {books.length === 0 ? (
+              <motion.div 
+                className="no-results"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <h2>No Results Found</h2>
+                <p>
+                  No books, authors, or publishers match your search criteria. 
+                  Try different keywords or clear the search to see all books.
+                </p>
+              </motion.div>
+            ) : (
+              books.map((book) => (
+                <motion.a
+                  key={book.id}
+                  href={book.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="book-link"
+                  variants={item}
+                  layout
+                >
+                  <div className="book-image-wrapper">
+                    <img src={book.image} alt={book.title} className="book-image" />
+                  </div>
+                  <div className="book-info">
+                    <h2 className="book-title">{book.title}</h2>
+                    <div className="book-details">
+                      <p className="book-author">{book.author}</p>
+                      <p className="book-publisher">{book.publisher}</p>
+                    </div>
+                  </div>
+                </motion.a>
+              ))
+            )}
+          </motion.div>
+        </AnimatePresence>
 
         {totalPages > 1 && (
           <div className="pagination">
