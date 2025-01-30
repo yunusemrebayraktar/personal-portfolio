@@ -52,14 +52,57 @@ const Books = () => {
       }
     };
 
+    // Only fetch when search is triggered or page changes
+    if (shouldSearch || currentPage !== 1) {
+      fetchBooks();
+    }
+    
     if (shouldSearch) {
       setCurrentPage(1);
       setShouldSearch(false);
       setSearchKey(prev => prev + 1);
     }
-    
-    fetchBooks();
-  }, [currentPage, shouldSearch, searchQuery]);
+  }, [currentPage, shouldSearch]); // Remove searchQuery from dependencies
+
+  // Initial fetch on component mount
+  useEffect(() => {
+    const fetchInitialBooks = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const searchParam = searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : '';
+        const url = `http://localhost:8000/api/books?page=${currentPage}${searchParam}`;
+        console.log('Fetching books from:', url);
+        
+        const response = await fetch(url);
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Received data:', data);
+        
+        if (!data.books || !Array.isArray(data.books)) {
+          throw new Error('Received data is not in the expected format');
+        }
+        
+        setBooks(data.books);
+        setTotalPages(data.total_pages);
+      } catch (err) {
+        console.error('Error details:', err);
+        setError(
+          `Failed to fetch books. Please ensure the backend server is running at http://localhost:8000. Error: ${err.message}`
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchInitialBooks();
+  }, []); // Empty dependency array for initial load only
 
   const handleSearch = (event) => {
     if (event.key === 'Enter') {

@@ -60,7 +60,7 @@ const Home = () => {
               <p className="language-level">Elementary Proficiency</p>
             </div>
             <div className="language-card">
-              <h3 className="language-name">Spanish</h3>
+              <h3 className="language-name">Chinese</h3>
               <p className="language-level">Currently Learning</p>
             </div>
           </div>
@@ -98,9 +98,7 @@ const Home = () => {
               { icon: FaGitAlt, name: "Git" },
               { icon: SiVisualstudiocode, name: "VS Code" },
               { icon: FaDocker, name: "Docker" },
-              { icon: SiPostman, name: "Postman" },
               { icon: FaFigma, name: "Figma" },
-              { icon: FaJira, name: "Jira" },
             ].map((tool, index) => (
               <div key={index} className="tool-card">
                 <tool.icon className="tool-icon" />
@@ -119,7 +117,7 @@ const Home = () => {
               <div className="timeline-content">
                 <h3 className="timeline-title">Software Engineer</h3>
                 <p className="timeline-place">Epsilon Technology</p>
-                <p className="timeline-date">June 2023 - Present</p>
+                <p className="timeline-date">June 2023 - January 2015</p>
                 <p className="timeline-description">
                   Working with HTML, CSS, and PHP to develop and maintain web applications.
                 </p>
